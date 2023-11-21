@@ -17,16 +17,20 @@ if(T){
   library(survival)
   library(survminer)
   library(ggthemes)
-  library(tidyverse)
+  library(tidyr)
   library(ggplot2)
   library(ggpubr)
   library(ggsignif)
   library(ggsci)
   library(DT)
-  library(data.table)
+  #library(data.table)
   library(maftools)
+  #library(future)
 }
 
+#plan(sequential, split = TRUE)
+#no_cores <- availableCores() - 1
+#plan(multicore, workers = no_cores)
 
 ## step II: load data
 #data_files <- list.files("data/", pattern = "\\.Rdata$", full.names = TRUE)
@@ -34,7 +38,8 @@ if(T){
 #for (file in data_files) {
   #load(file)
 #}
-load("data/hccTAAb_data.Rdata")
+
+load("data/taa_ID.Rdata")
 
 
 

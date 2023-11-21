@@ -9,7 +9,7 @@ header <- dashboardHeader(titleWidth = 250,
                           #tags$img(src = "ltd.png", height = "30px"),
                           title = shinyDashboardLogo(
                             theme = "blue_gradient",
-                            boldText = tags$span(style = "font-family: Arial; font-size: 20px;", "hccTAAb"),
+                            boldText = tags$span(style = "font-family: Arial; font-size: 22px;", "hccTAAb"),
                             mainText = " Atlas",
                             badgeText = "v1.2"),
                           userOutput("user")
@@ -24,14 +24,16 @@ sidebar <- dashboardSidebar(
              menuSubItem("Expression Pattern",tabName = "expression"),
              menuSubItem("Survival Analysis",tabName = "survival"),
              menuSubItem("Immune Infiltration",tabName = "immune"),
-             menuSubItem("Similarity Analysis",tabName = "similergene"),
+             menuSubItem("Similarity Analysis",tabName = "similarity"),
              menuSubItem("DNA Methylation",tabName = "methylation"),
              menuSubItem("DNA Mutation",tabName = "mutation")),
-    menuItem("Datasets", tabName = "datasets", icon = icon("server")),
+    menuItem("Datasets", tabName = "datasets", icon = icon("server"),startExpanded = FALSE,
+             menuSubItem("Public Datasets",tabName = "public_datasets"),
+             menuSubItem("Submit your Data",tabName = "submit")),
     menuItem("Help",icon = icon("hire-a-helper"),startExpanded = FALSE, 
              menuSubItem("Help",tabName = "help"),
              menuSubItem("About",tabName = "about"),
-             menuSubItem("Update",tabName = "update"))
+             menuSubItem("Update Logs",tabName = "update"))
   )
 )
 
@@ -87,21 +89,21 @@ body <- dashboardBody(
     
     ## expression
     tabItem("expression", 
-            fluidPage(selectInput(inputId = "taab_name1", label = h4(strong("Select TAAb")), 
+            fluidPage(selectInput(inputId = "taab_name1", label = h4(strong("Select Interested Indicator")), 
                                   choices = idtaa, selected = "ATIC"),
                       fluidRow(column(2, actionButton("action1", label = "Calculator", icon = icon("calculator"))))
             ),
             br(),
             box(title = tags$b("Gene Expression Levels for the Selected TAAb"), 
                 width = 12, collapsible = T, solidHeader = T, status = "primary",
-                plotOutput("expr_gene",height = 342),downloadButton("download_plot_expr_gene", 
+                plotOutput("expr_gene", height = "36vh"),downloadButton("download_plot_expr_gene", 
                                                                     label = "Download", class = "text-primary")),
             #fluidPage(width = 12, plotOutput("expr_gene",height = 430)),
             br(),
             #fluidPage(width = 12, uiOutput("expr_protein")), ## UALCAN 
             box(title = tags$b("Protein Expression Levels for the Selected TAAb"), 
                 width = 5, collapsible = T, solidHeader = T, status = "primary",
-                plotOutput("expr_protein",height = 342),downloadButton("download_plot_expr_protein", 
+                plotOutput("expr_protein",height = "34vh"),downloadButton("download_plot_expr_protein", 
                                                                        label = "Download", class = "text-primary")),
             br(),
             box(title = tags$b("Table of Protein Expression for the Selected TAAb using HPA Pathology Data"), 
@@ -114,10 +116,10 @@ body <- dashboardBody(
             #box(title = "Exp_Plot",status = "success",solidHeader = TRUE, width = 12,plotOutput("expr_plot", height = 430, width = 1500))
     ),
     
-    ## sur
+    ## survival
     tabItem("survival", 
             fluidPage(
-              selectInput(inputId = "taab_name2", label = h4(strong("Select TAAb")), choices = idtaa, selected = "ATIC"),
+              selectInput(inputId = "taab_name2", label = h4(strong("Select Interested Indicator")), choices = idtaa, selected = "ATIC"),
               fluidRow(column(width = 2, actionButton("action2", label = "Calculator", icon = icon("calculator"))))),
             br(),
             box(title = tags$b("Survival Analysis (TCGA-LIHC)"), 
@@ -140,10 +142,11 @@ body <- dashboardBody(
                 )
             )
     ),
+    
     ## immune
     tabItem("immune", 
             fluidPage(
-              fluidRow(column(width = 3, selectInput("taab_name3", label = h4(strong("Select TAAb")), 
+              fluidRow(column(width = 3, selectInput("taab_name3", label = h4(strong("Select Interested Indicator")), 
                                                      choices = idtaa, selected = "ATIC"))),
                        #column(width = 3, selectInput("immune_cells", label = h4(strong("Select Immune cells")), selected = "B_cells_naive",
                                                      #choices = unique(expr_Immune$immune_cell), multiple = TRUE))),
@@ -169,11 +172,12 @@ body <- dashboardBody(
                 plotOutput("immunecells_plot",height = 1115),
                 downloadButton("download_plot_immune_CIBERSORT", label = "Download", class = "text-primary"))
     ),
+    
     ## Similarity
-    tabItem("similergene", 
+    tabItem("similarity", 
             fluidPage(
-              fluidRow(column(width = 3, selectInput(inputId = "taab_name4", label = h4(strong("Select TAAb")), choices = idtaa, selected = "ATIC")),
-                       column(width = 3, sliderInput(inputId = "mumber_top",label = h4(strong("Select the Number to Display")), min = 1, max = 300, value = 100, step = 1))
+              fluidRow(column(width = 3, selectInput(inputId = "taab_name4", label = h4(strong("Select Interested Indicator")), choices = idtaa, selected = "ATIC")),
+                       column(width = 3, sliderInput(inputId = "mumber_top",label = h4(strong("Select the Number to Display")), min = 1, max = 600, value = 200, step = 5))
               ),
               fluidRow(column(width = 2, actionButton("action4", label = "Calculator", icon = icon("calculator"))))),
             br(),
@@ -205,7 +209,7 @@ body <- dashboardBody(
                                    column(width = 5, plotOutput("mutation_plot2",height = 500)),
                                    column(width = 3, plotOutput("mutation_plot3",height = 500))))),
             hr(),
-            fluidPage(selectInput("taab_name5", label = h4(strong("Select TAAb")), choices = idtaa, selected = "ATIC"),
+            fluidPage(selectInput("taab_name5", label = h4(strong("Select Interested Indicator")), choices = idtaa, selected = "ATIC"),
                       fluidRow(column(width = 2, actionButton("action5", label = "Calculator", icon = icon("calculator"))))),
             hr(),
             box(title = tags$b("lollipopPlot of Selected TAAb for detection of HCC"), 
@@ -215,18 +219,45 @@ body <- dashboardBody(
             hr(),
             fluidPage(width = 12, dataTableOutput("data_mutation"))
     ),
-    tabItem("datasets", 
+    
+    ## dataset
+    tabItem("public_datasets", 
             fluidPage(width = 12, 
                       HTML("<h3><strong>Public Datasets</strong></h3>"),
                       dataTableOutput("used_data"),
                       HTML("<h3><strong>Literature-based Data</strong></h3>
                            <p style='font-size: 22px; font-family:Times New Roman;'>
                            The data of the literature can be obtained by clicking on the TAAb name in the TAAb information table (first column).
-                           </p>"
-                           ),
-                      )
+                           </p>")
+            )),
+    tabItem("submit",
+            fluidPage(width = 12, 
+                      HTML("<h3><strong>Submit your Data</strong></h3>
+                           <p style='font-size: 22px; font-family:Times New Roman;'>
+                           hccTAAb Atlas allows for third-party data submission, which is crucial for keeping our data up-to-date. 
+                           We strongly encourage users to upload yourself data by filling in the information below and submitting it. 
+                           Your contribution to hccTAAb Atlas is greatly appreciated.
+                           </p>")),
+            fluidPage(width = 12,
+              fluidRow(column(width = 3, selectInput(inputId = "data_types", label = h5(strong("Data Types")), choices = c("TAAb", "Public Data"))),
+                       column(width = 3, textInput(inputId = "data_id",label = h5(strong("TAAb/Public Data")),
+                                                   value = "Example: TP53/GSE144269")),
+                       column(width = 6, textInput(inputId = "literature",label = h5(strong("Related Literature")),
+                                                   value = "Example: A unique metastasis gene signature enables prediction of tumor relapse in early-stage hepatocellular carcinoma patients")),
+                
+              ),
+              fluidRow(column(width = 3, textInput(inputId = "others", label = h5(strong("Other information")),
+                                                   value = "Enter the other information")),
+                       column(width = 3, textInput(inputId = "email",label = h5(strong("Please enter your email")),
+                                                   value = "Example: xxxxxx@163.com"))),
+              actionButton("submission_userdata",label = " Submit your Data",icon = icon("sign-in"),
+                           style = "background-color: #3C8DBC; color: white;"),
+              br(),
+              br(),
+              uiOutput("submission_message"),
+              hr(),
+            )
     ),
-    
     
     ## About
     tabItem("about", 
@@ -260,8 +291,8 @@ body <- dashboardBody(
                            </p>
                            
                            <h3><strong><span style='color: #3C8DBC'>How to Cite hccTAAb Atlas ?</strong></h3>
-                           <p style='font-size: 21px; font-family:Times New Roman;'>TD Li, P Wang, GY Sun, YF Cheng, H Wang, Y Lu, JX Shi, KY Wang, H Ye.    
-                           hccTAAb Atlas: an integrated knowledge database for tumor-associated autoantibodies in hepatocellular carcinoma(in preparation).</p>
+                           <p style='font-size: 21px; font-family:Times New Roman;'>TD Li, P Wang, GY Sun, YL Zou, YF Cheng, H Wang, Y Lu, JX Shi, KY Wang, Q Zhang, H Ye.    
+                           hccTAAb Atlas: an integrated knowledge database for tumor-associated autoantibodies in hepatocellular carcinoma.</p>
                            
                            <h3><strong><span style='color: #3C8DBC'>Relevant Published Studies</strong></h3>
                            <ul>
@@ -278,9 +309,10 @@ body <- dashboardBody(
                            </p>
                            
                            <h3><strong><span style='color: #3C8DBC'>Acknowledgements</strong></h3>
-                           <p style='font-size: 21px; font-family:Times New Roman;'> We express our sincere gratitude to Prof. HE Xu and GY Qin for their invaluable technical support; 
+                           <p style='font-size: 21px; font-family:Times New Roman;'> We express our sincere gratitude to Prof. HE Xu, GY Qin and MZ Fan for their invaluable technical support; 
                            Additionally, we extend our thanks to the <a href='http://nscc.zzu.edu.cn/' style='font-size: 20px;font-family:Times New Roman;'>National Supercomputing Center In Zhengzhou</a> for providing the platform.</p>
                            
+                           <div style='margin-bottom: 20px;'></div>
                            "
                       ))),
     ## update logs
@@ -310,20 +342,20 @@ body <- dashboardBody(
                            
                            <h3><strong><span style='color: #3C8DBC'>TAAb Information</strong></h3>
                            <img src='information.png' style='width: 1200px; height: auto;'>
-                           <div style='margin-top: 1px;'></div>,
+                           <div style='margin-top: 1px;'></div>
                            <p style='font-size: 22px;font-family:Times New Roman;'>Click the <b>TAAb Information</b>, users can view the sensitivity and specificity of the 
                            corresponding TAAb (<b>One point represents one TAAb</b>), all the links in the table below are clickable. </p>
                            
                            <h3><strong><span style='color: #3C8DBC'>Expression Pattern</strong></h3>
                            <img src='expression.png'  style='width: 1200px; height: auto;'>
-                           <div style='margin-top: 1px;'></div>,
+                           <div style='margin-top: 1px;'></div>
                            <p style='font-size: 22px;font-family:Times New Roman;'> 
                            Click on <b>Expression Pattern</b> and <b>Select a TAAb</b>. Then, click on the <b>Calculator</b>, users will be able to obtain figures and tables. 
                            By clicking on <b>Download</b>, users can save images locally.   | ns: <em>P</em> >0.05, *: <em>P</em><= 0.05, **: <em>P</em> <= 0.01, ***: <em>P</em> <= 0.001, ****: <em>P</em> <= 0.0001. </p>
                            
                            <h3><strong><span style='color: #3C8DBC'>Survival Analysis</strong></h3>
                            <img src='survival.png'  style='width: 1200px; height: auto;'>
-                           <div style='margin-top: 1px;'></div>,
+                           <div style='margin-top: 1px;'></div>
                            <p style='font-size: 22px;font-family:Times New Roman;'> 
                            Click on <b>Survival Analysis</b> and <b>Select a TAAb</b>. Then, click on the <b>Calculator</b>, users will be able to obtain Kaplan-Meier plots and hazard ratios. 
                            By clicking on <b>Download</b>, users can save images locally. </p>
@@ -331,30 +363,32 @@ body <- dashboardBody(
                            
                            <h3><strong><span style='color: #3C8DBC'>Immune Infiltration</strong></h3>
                            <img src='immune.png' style='width: 1200px; height: auto;'>
-                           <div style='margin-top: 1px;'></div>,
+                           <div style='margin-top: 1px;'></div>
                            <p style='font-size: 22px;font-family:Times New Roman;'> 
                            Click on <b>Immune Infiltration</b> and <b>Select a TAAb</b>. Then, click on the <b>Calculator</b>, users will be able to obtain 
                            the relationship between selected TAAb and immune infiltration levels (ssGSEA and CIBERSORT). By clicking on <b>Download</b>, users can save images locally. </p>
                            
                            <h3><strong><span style='color: #3C8DBC'>Similarity Analysis</strong></h3>
                            <img src='similarity.png'  style='width: 1200px; height: auto;'>
-                           <div style='margin-top: 1px;'></div>,
+                           <div style='margin-top: 1px;'></div>
                            <p style='font-size: 22px;font-family:Times New Roman;'> 
                            Click on <b>Similarity Analysis</b> and <b>Select a TAAb</b>. Then, click on the <b>Calculator</b>, users will be able to obtain genes 
                            that exhibit both positive and negative correlations with the selected TAAb. Users can change the number of genes by clicking the <b>Select the Number to Display</b> (the default value is 100).</p>
                            
                            <h3><strong><span style='color: #3C8DBC'>DNA Methylation</strong></h3>
                            <img src='methylation.png' alt='Expression Pattern'  style='width: 1200px; height: auto;'>
-                           <div style='margin-top: 1px;'></div>,
+                           <div style='margin-top: 1px;'></div>
                            <p style='font-size: 22px;font-family:Times New Roman;'> 
                            Click on <b>DNA Methylation</b>, users will be able to obtain the table of DNA methylation differential analysis.</b> 
                     
                            <h3><strong><span style='color: #3C8DBC'>DNA Mutation</strong></h3>
                            <img src='mutation.png' alt='Expression Pattern'  style='width: 1200px; height: auto;'>
-                           <div style='margin-top: 1px;'></div>,
+                           <div style='margin-top: 1px;'></div>
                            <p style='font-size: 22px;font-family:Times New Roman;'> 
                            Click on <b>DNA Mutation</b> and <b>Select a TAAb</b>. Then, click on the <b>Calculator</b>, users will be able to obtain 
-                           lollipop plot and detailed information table for the selected TAAb.</b> 
+                           lollipop plot and detailed information table for the selected TAAb.</b>
+                           
+                           <div style='margin-bottom: 30px;'></div>
                            "
                       )))
     
@@ -366,6 +400,4 @@ ui <- dashboardPage(header=header,
                     body=body, 
                     controlbar = dashboardControlbar(skinSelector()),
                     title = "hccTAAb Atlas")
-
-
 
