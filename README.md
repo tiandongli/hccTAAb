@@ -11,7 +11,7 @@ http://nscc.zzu.edu.cn/hccTAAb/
 
 ***Cite us!***
 
-TD Li, P Wang, GY Sun, YF Cheng, H Wang, Y Lu, JX Shi, KY Wang, H Ye. hccTAAb Atlas: an integrated knowledge database for tumor-associated autoantibodies in hepatocellular carcinoma(in preparation)
+TD Li, P Wang, GY Sun, YL Zou, YF Cheng, H Wang, Y Lu, JX Shi, KY Wang, Q Zhang, H Ye. hccTAAb Atlas: an integrated knowledge database for tumor-associated autoantibodies in hepatocellular carcinoma(in preparation)
 
 ***Contact:***
 
