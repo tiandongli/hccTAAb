@@ -3,7 +3,7 @@
 ### An integrated knowledge database for tumor-associated autoantibodies in hepatocellular carcinoma
 #### Web server
 
-http://nscc.zzu.edu.cn/hccTAAb/
+https://nscc.v.zzu.edu.cn/hccTAAb/ or http://nscc.zzu.edu.cn/hccTAAb/
 
 <img src="https://github.com/tiandongli/hccTAAb/blob/main/www/0_flow%20diagram.png" style='width: 600px; height: auto;'>
 
